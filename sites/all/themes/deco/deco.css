@@ -1,0 +1,36 @@
+#main, #breadcrumb, #featured, #content-bottom, #footer .region-content, #top-bar .region-content {
+  padding: 0 0;
+}
+
+#sidebar-wrapper, #breadcrumb .region-content, #featured .region-content, #content-bottom .region-content, #footer .region-content, #top-bar .region-content {
+ margin: 0 0 0 0;
+ max-width: 100%;
+ min-width: 100%;
+}
+
+#header .region-content {
+  margin: 20px 0 0 0;
+}
+
+#header ul.primary-links {
+  margin: -48px 0 0 0;
+}
+
+#deco-cke-body {
+ background : #FFFFCC;
+ text-align: left;
+ font-size: 0.8em;
+}
+
+ul li.leaf {
+  list-style-image: none;
+  list-style-type: none;
+}
+
+html.js fieldset.collapsed .fieldset-legend, html.js fieldset.collapsible .fieldset-legend {
+  background: none;
+}
+
+.region-content-bottom {
+   padding: 2em 0 0 0;
+}

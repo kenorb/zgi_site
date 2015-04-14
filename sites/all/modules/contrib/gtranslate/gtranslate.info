@@ -1,0 +1,11 @@
+name = GTranslate
+description = Uses Google power to translate your web site.
+configure = admin/config/regional/gtranslate
+package = Multilanguage
+core = 7.x
+; Information added by drupal.org packaging script on 2011-07-06
+version = "7.x-1.7"
+core = "7.x"
+project = "gtranslate"
+datestamp = "1309958525"
+
