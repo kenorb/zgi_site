@@ -4,16 +4,16 @@
  * @file
  * Administrative script for running authorized file operations.
  *
- * Using this script, the site owner (the user actually owning the files on
- * the webserver) can authorize certain file-related operations to proceed
- * with elevated privileges, for example to deploy and upgrade modules or
- * themes. Users should not visit this page directly, but instead use an
- * administrative user interface which knows how to redirect the user to this
- * script as part of a multistep process. This script actually performs the
- * selected operations without loading all of Drupal, to be able to more
- * gracefully recover from errors. Access to the script is controlled by a
- * global killswitch in settings.php ('allow_authorize_operations') and via
- * the 'administer software updates' permission.
+ * Using this script, the site owner (the user actually owning the files on the
+ * webserver) can authorize certain file-related operations to proceed with
+ * elevated privileges, for example to deploy and upgrade modules or themes.
+ * Users should not visit this page directly, but instead use an administrative
+ * user interface which knows how to redirect the user to this script as part of
+ * a multistep process. This script actually performs the selected operations
+ * without loading all of Drupal, to be able to more gracefully recover from
+ * errors. Access to the script is controlled by a global killswitch in
+ * settings.php ('allow_authorize_operations') and via the 'administer software
+ * updates' permission.
  *
  * There are helper functions for setting up an operation to run via this
  * system in modules/system/system.module. For more information, see:
@@ -21,21 +21,22 @@
  */
 
 /**
- * Root directory of Drupal installation.
+ * Defines the root directory of the Drupal installation.
  */
 define('DRUPAL_ROOT', getcwd());
 
 /**
- * Global flag to identify update.php and authorize.php runs, and so
- * avoid various unwanted operations, such as hook_init() and
- * hook_exit() invokes, css/js preprocessing and translation, and
- * solve some theming issues. This flag is checked on several places
- * in Drupal code (not just authorize.php).
+ * Global flag to identify update.php and authorize.php runs.
+ *
+ * Identifies update.php and authorize.php runs, avoiding unwanted operations
+ * such as hook_init() and hook_exit() invokes, css/js preprocessing and
+ * translation, and solves some theming issues. The flag is checked in other
+ * places in Drupal code (not just authorize.php).
  */
 define('MAINTENANCE_MODE', 'update');
 
 /**
- * Render a 403 access denied page for authorize.php
+ * Renders a 403 access denied page for authorize.php.
  */
 function authorize_access_denied_page() {
   drupal_add_http_header('Status', '403 Forbidden');
@@ -45,13 +46,13 @@ function authorize_access_denied_page() {
 }
 
 /**
- * Determine if the current user is allowed to run authorize.php.
+ * Determines if the current user is allowed to run authorize.php.
  *
  * The killswitch in settings.php overrides all else, otherwise, the user must
  * have access to the 'administer software updates' permission.
  *
  * @return
- *   TRUE if the current user can run authorize.php, otherwise FALSE.
+ *   TRUE if the current user can run authorize.php, and FALSE if not.
  */
 function authorize_access_allowed() {
   return variable_get('allow_authorize_operations', TRUE) && user_access('administer software updates');
@@ -60,7 +61,6 @@ function authorize_access_allowed() {
 // *** Real work of the script begins here. ***
 
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
-require_once DRUPAL_ROOT . '/includes/session.inc';
 require_once DRUPAL_ROOT . '/includes/common.inc';
 require_once DRUPAL_ROOT . '/includes/file.inc';
 require_once DRUPAL_ROOT . '/includes/module.inc';
@@ -74,7 +74,7 @@ drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
 global $conf;
 
 // We have to enable the user and system modules, even to check access and
-// display errors via the maintainence theme.
+// display errors via the maintenance theme.
 $module_list['system']['filename'] = 'modules/system/system.module';
 $module_list['user']['filename'] = 'modules/user/user.module';
 module_list(TRUE, FALSE, FALSE, $module_list);
@@ -145,7 +145,7 @@ if (authorize_access_allowed()) {
         l(t('Front page'), '<front>'),
       ));
     }
-	
+
     $output .= theme('item_list', array('items' => $links, 'title' => t('Next steps')));
   }
   // If a batch is running, let it run.
@@ -172,4 +172,3 @@ else {
 if (!empty($output)) {
   print theme('update_page', array('content' => $output, 'show_messages' => $show_messages));
 }
-

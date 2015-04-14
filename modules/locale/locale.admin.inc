@@ -275,8 +275,7 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
   else {
     $form['langcode'] = array('#type' => 'textfield',
       '#title' => t('Language code'),
-      '#size' => 12,
-      '#maxlength' => 60,
+      '#maxlength' => 12,
       '#required' => TRUE,
       '#default_value' => @$language->language,
       '#disabled' => (isset($language->language)),
@@ -307,7 +306,7 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
     '#title' => t('Language domain'),
     '#maxlength' => 128,
     '#default_value' => @$language->domain,
-    '#description' => t('URL <strong>including protocol</strong> to use for this language, if your <em>Detection and selection</em> settings use URL domains. For the default language, this value may be left blank. <strong>Modifying this value may break existing URLs. Use with caution in a production environment.</strong> Example: Specifying "http://example.de" or "http://de.example.com" as language domains for German results in URLs like "http://example.de/contact" and "http://de.example.com/contact", respectively.'),
+    '#description' => t('The domain name to use for this language if URL domains are used for <em>Detection and selection</em>. Leave blank for the default language. <strong>Changing this value may break existing URLs.</strong> Example: Specifying "de.example.com" as language domain for German will result in an URL like "http://de.example.com/contact".'),
   );
   $form['direction'] = array('#type' => 'radios',
     '#title' => t('Direction'),
@@ -389,13 +388,13 @@ function locale_languages_edit_form_validate($form, &$form_state) {
     form_set_error('prefix', t('Domain and path prefix values should not be set at the same time.'));
   }
   if (!empty($form_state['values']['domain']) && $duplicate = db_query("SELECT language FROM {languages} WHERE domain = :domain AND language <> :language", array(':domain' => $form_state['values']['domain'], ':language' => $form_state['values']['langcode']))->fetchField()) {
-    form_set_error('domain', t('The domain (%domain) is already tied to a language (%language).', array('%domain' => $form_state['values']['domain'], '%language' => $duplicate->language)));
+    form_set_error('domain', t('The domain (%domain) is already tied to a language (%language).', array('%domain' => $form_state['values']['domain'], '%language' => $duplicate)));
   }
   if (empty($form_state['values']['prefix']) && language_default('language') != $form_state['values']['langcode'] && empty($form_state['values']['domain'])) {
     form_set_error('prefix', t('Only the default language can have both the domain and prefix empty.'));
   }
   if (!empty($form_state['values']['prefix']) && $duplicate = db_query("SELECT language FROM {languages} WHERE prefix = :prefix AND language <> :language", array(':prefix' => $form_state['values']['prefix'], ':language' => $form_state['values']['langcode']))->fetchField()) {
-    form_set_error('prefix', t('The prefix (%prefix) is already tied to a language (%language).', array('%prefix' => $form_state['values']['prefix'], '%language' => $duplicate->language)));
+    form_set_error('prefix', t('The prefix (%prefix) is already tied to a language (%language).', array('%prefix' => $form_state['values']['prefix'], '%language' => $duplicate)));
   }
 }
 
@@ -1140,11 +1139,11 @@ function locale_translate_edit_form($form, &$form_state, $lid) {
     '#value' => $source->location
   );
 
-  // Include default form controls with empty values for all languages.
-  // This ensures that the languages are always in the same order in forms.
+  // Include both translated and not yet translated target languages in the
+  // list. The source language is English for built-in strings and the default
+  // language for other strings.
   $languages = language_list();
   $default = language_default();
-  // We don't need the default language value, that value is in $source.
   $omit = $source->textgroup == 'default' ? 'en' : $default->language;
   unset($languages[($omit)]);
   $form['translations'] = array('#tree' => TRUE);
@@ -1243,9 +1242,7 @@ function locale_translate_delete_page($lid) {
   if ($source = db_query('SELECT lid, source FROM {locales_source} WHERE lid = :lid', array(':lid' => $lid))->fetchObject()) {
     return drupal_get_form('locale_translate_delete_form', $source);
   }
-  else {
-    return drupal_not_found();
-  }
+  return MENU_NOT_FOUND;
 }
 
 /**

@@ -100,11 +100,13 @@ acronym {
 }
 ul,
 .block ul,
-.item-list ul,
 .item-list ul {
   list-style-type: disc;
   list-style-image: none;
   margin: 0.25em 0 0.25em 1.5em; /* LTR */
+}
+.item-list .pager li {
+  padding: 0.5em;
 }
 .item-list ul li,
 li.leaf,
@@ -316,7 +318,7 @@ ul.secondary {
 }
 ul.secondary li {
   margin: 0 5px;
-  float: right; /* LTR */
+  float: none; /* LTR */
 }
 ul.secondary li a {
   background-color: #ddd;
@@ -473,6 +475,12 @@ table th {
   border-color: #bebfb9;
   padding: 3px 10px;
 }
+/**
+ * Force browsers to calculate the width of a 'select all' TH element.
+ */
+table th.select-all {
+  width: 1px;
+}
 table th.active {
   background: #bdbeb9;
 }
@@ -599,10 +607,8 @@ div.teaser-checkbox .form-item,
   padding: 0;
 }
 .form-item label.option {
-  text-transform: none;
-}
-.form-item label.option {
   font-size: 0.923em;
+  text-transform: none;
 }
 .form-item label.option input {
   vertical-align: middle;
@@ -703,12 +709,7 @@ select.form-select:focus {
   color: #000;
   border-color: #ace;
 }
-html.js input.form-autocomplete {
-  background-position: 100% 4px;
-}
-html.js input.throbbing {
-  background-position: 100% -16px;
-}
+
 ul.action-links {
   margin: 1em 0;
   padding: 0 20px 0 20px; /* LTR */
@@ -770,19 +771,6 @@ div.admin-panel h3 {
 }
 .system-themes-list-enabled .theme-selector h3 {
   margin-top: 0;
-}
-
-/* admin/content and admin/people */
-dl.multiselect,
-dl.multiselect dt,
-dl.multiselect dd {
-  margin: 0 10px 0 0; /* LTR */
-}
-dl.multiselect select,
-dl.multiselect dd select {
-  font-size: 0.923em;
-  background: #fff;
-  border: 1px solid #ccc;
 }
 
 /* Update options. */
@@ -848,6 +836,7 @@ body.in-maintenance .form-submit {
 }
 body.in-maintenance #logo {
   margin-bottom: 1.5em;
+  max-width: 180px;
 }
 ol.task-list {
   margin-left: 0; /* LTR */
@@ -864,7 +853,6 @@ ol.task-list li.active {
   color: #000;
 }
 ol.task-list li.done {
-  color: #393;
   background: transparent url(images/task-check.png) no-repeat 0 50%;
   color: green;
 }

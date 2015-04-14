@@ -135,16 +135,36 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'body':
         case 'summary':
-          if (!empty($node->body)) {
-            $item = $node->body[$node->language][0];
-            $column = ($name == 'body') ? 'value' : 'summary';
+          if ($items = field_get_items('node', $node, 'body', $language_code)) {
             $instance = field_info_instance('node', 'body', $node->type);
-            $replacements[$original] = $sanitize ? _text_sanitize($instance, $node->language, $item, $column) : $item[$column];
+            $field_langcode = field_language('node', $node, 'body', $language_code);
+            // If the summary was requested and is not empty, use it.
+            if ($name == 'summary' && !empty($items[0]['summary'])) {
+              $output = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], 'summary') : $items[0]['summary'];
+            }
+            // Attempt to provide a suitable version of the 'body' field.
+            else {
+              $output = $sanitize ? _text_sanitize($instance, $field_langcode, $items[0], 'value') : $items[0]['value'];
+              // A summary was requested.
+              if ($name == 'summary') {
+                if (isset($instance['display']['teaser']['settings']['trim_length'])) {
+                  $trim_length = $instance['display']['teaser']['settings']['trim_length'];
+                }
+                else {
+                  // Use default value.
+                  $trim_length = NULL;
+                }
+                // Generate an optionally trimmed summary of the body field.
+                $output = text_summary($output, $instance['settings']['text_processing'] ? $items[0]['format'] : NULL, $trim_length);
+              }
+            }
+            $replacements[$original] = $output;
           }
           break;
 
         case 'language':
-          $replacements[$original] = $sanitize ? check_plain($node->language) : $node->language;
+          $langcode = entity_language('node', $node);
+          $replacements[$original] = $sanitize ? check_plain($langcode) : $langcode;
           break;
 
         case 'url':
@@ -157,8 +177,9 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         // Default values for the chained tokens handled below.
         case 'author':
-          $name = ($node->uid == 0) ? variable_get('anonymous', t('Anonymous')) : $node->name;
-          $replacements[$original] = $sanitize ? filter_xss($name) : $name;
+          $account = user_load($node->uid);
+          $name = format_username($account);
+          $replacements[$original] = $sanitize ? check_plain($name) : $name;
           break;
 
         case 'created':
