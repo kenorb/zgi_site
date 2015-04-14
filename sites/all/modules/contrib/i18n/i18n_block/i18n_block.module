@@ -25,7 +25,7 @@ function i18n_block_menu() {
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'weight' => 10,
   );
-  $items['admin/structure/block/manage/%/%/translate/%language'] = array(
+  $items['admin/structure/block/manage/%/%/translate/%i18n_language'] = array(
     'title' => 'Translate',
     'access callback' => 'i18n_block_translate_tab_access',
     'access arguments' => array(4, 5),
@@ -59,7 +59,7 @@ function i18n_block_menu_alter(&$items) {
  */
 function i18n_block_translate_tab_access($module, $delta) {
   $block = block_load($module, $delta);
-  return user_access('translate interface') && isset($block) && ($block->i18n_mode == I18N_MODE_LOCALIZE);
+  return user_access('translate interface') && $block && isset($block->i18n_mode) && ($block->i18n_mode == I18N_MODE_LOCALIZE);
 }
 
 /**
@@ -104,11 +104,28 @@ function i18n_block_block_list_alter(&$blocks) {
  */
 function i18n_block_block_view_alter(&$data, $block) {
   if (!empty($block->i18n_mode)) {
-    if ($block->title && $block->title != '<none>') {
-      $block->title = i18n_string(array('blocks', $block->module, $block->delta, 'title'), $block->title);
+    if (!empty($block->title) && $block->title != '<none>') {
+      // Unfiltered, as $block->subject will be created later from the title.
+      $data['title'] = i18n_string(array('blocks', $block->module, $block->delta, 'title'), $block->title, array('sanitize' => FALSE));
     }
     if ($block->module == 'block' && isset($data['content'])) {
       $data['content'] = i18n_string(array('blocks', $block->module, $block->delta, 'body'), $data['content']);
+    }
+  }
+}
+
+/**
+ * Implements hook_context_block_info_alter().
+ */
+function i18n_block_context_block_info_alter(&$block_info) {
+  $theme_key = variable_get('theme_default', 'garland');
+  $result = db_select('block')
+    ->fields('block', array('module', 'delta', 'i18n_mode'))
+    ->condition('theme', $theme_key)
+    ->execute();
+  foreach ($result as $row) {
+    if (isset($block_info["{$row->module}-{$row->delta}"])) {
+      $block_info["{$row->module}-{$row->delta}"]->i18n_mode = $row->i18n_mode;
     }
   }
 }

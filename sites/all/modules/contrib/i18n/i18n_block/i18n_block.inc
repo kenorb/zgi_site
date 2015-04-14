@@ -7,6 +7,18 @@
  * Block object
  */
 class i18n_block_object extends i18n_string_object_wrapper {
+
+  /**
+   * Load a block object.
+   *
+   * @param $object
+   *  An array with module and delta.
+   */
+  function load_object($object) {
+    $this->object = call_user_func_array($this->get_info('load callback'), $object);
+    return $this->get_object();
+  }
+
   /**
    * Get base keys for translating this object
    */

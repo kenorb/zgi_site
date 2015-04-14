@@ -15,6 +15,10 @@
  */
 function i18n_taxonomy_term_page($term) {
   $term = i18n_taxonomy_localize_terms($term);
+
+  // Assign the term name as the page title.
+  drupal_set_title($term->name);
+
   // Build breadcrumb based on the hierarchy of the term.
   $current = (object) array(
     'tid' => $term->tid,
@@ -33,14 +37,12 @@ function i18n_taxonomy_term_page($term) {
   drupal_add_feed('taxonomy/term/' . $term->tid . '/feed', 'RSS - ' . $term->name);
 
   $build = array();
-  // Add term heading if the term has a description
-  if (!empty($term->description)) {
-    $build['term_heading'] = array(
-      '#prefix' => '<div class="term-listing-heading">',
-      '#suffix' => '</div>',
-      'term' => taxonomy_term_view($term, 'full'),
-    );
-  }
+
+  $build['term_heading'] = array(
+    '#prefix' => '<div class="term-listing-heading">',
+    '#suffix' => '</div>',
+    'term' => taxonomy_term_view($term, 'full'),
+  );
 
   if ($nids = taxonomy_select_nodes($term->tid, TRUE, variable_get('default_nodes_main', 10))) {
     $nodes = node_load_multiple($nids);
@@ -58,37 +60,6 @@ function i18n_taxonomy_term_page($term) {
     );
   }
   return $build;
-}
-
-/**
- * Render a taxonomy term page HTML output.
- *
- * @param $tids
- *   An array of term ids.
- * @param $result
- *   A pager_query() result, such as that performed by taxonomy_select_nodes().
- *
- * @ingroup themeable
- */
-function theme_i18n_taxonomy_term_page($tids, $result) {
-  drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
-
-  $output = '';
-
-  // Only display the description if we have a single term, to avoid clutter and confusion.
-  if (count($tids) == 1) {
-    $term = i18n_taxonomy_localize_terms(taxonomy_term_load($tids[0]));
-    // Check that a description is set.
-    if (!empty($term->description)) {
-      $output .= '<div class="taxonomy-term-description">';
-      $output .= filter_xss_admin($term->description);
-      $output .= '</div>';
-    }
-  }
-
-  $output .= taxonomy_render_nodes($result);
-
-  return $output;
 }
 
 /**
@@ -150,7 +121,7 @@ function _i18n_taxonomy_autocomplete($langcode, $vids, $tags_typed = '') {
       ->execute()
       ->fetchAllKeyed();
 
-    $prefix = count($tags_typed) ? implode(', ', $tags_typed) . ', ' : '';
+    $prefix = count($tags_typed) ? drupal_implode_tags($tags_typed) . ', ' : '';
 
     $term_matches = array();
     foreach ($tags_return as $tid => $name) {
@@ -159,9 +130,7 @@ function _i18n_taxonomy_autocomplete($langcode, $vids, $tags_typed = '') {
       if (strpos($name, ',') !== FALSE || strpos($name, '"') !== FALSE) {
         $n = '"' . str_replace('"', '""', $name) . '"';
       }
-      else {
-        $term_matches[$prefix . $n] = check_plain($name);
-      }
+      $term_matches[$prefix . $n] = check_plain($name);
     }
   }
 

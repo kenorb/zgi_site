@@ -3,8 +3,8 @@ body {
   padding:0;
   color:#444;
   background-color:#f3f3f3;
-  font-family: "Century Gothic",Tahoma,Helvetica,Arial,Verdana;
-  font-size: 12px;
+  font-family:"Century Gothic",Tahoma,Helvetica,Arial,Verdana;
+  font-size:12px;
   background-repeat:repeat-x;
   background-position:top;
 }
@@ -14,8 +14,8 @@ input.form-text, textarea {
   -moz-border-radius:5px;
   -webkit-border-radius:5px;
   background-color:#fff;
-  border: 1px solid #ccc;
-  padding: 5px;
+  border:1px solid #ccc;
+  padding:5px;
 }
 
 input.form-submit {
@@ -28,7 +28,7 @@ input.form-submit {
   font-size:12px;
   margin:0.25em 0;
   padding:2px 10px;
-  cursor: pointer;
+  cursor:pointer;
 }
 
 input.form-submit:hover {
@@ -36,7 +36,7 @@ input.form-submit:hover {
   border:2px solid #999;
 }
 
-/****** begin: views module button fix ******/
+/****** begin:views module button fix ******/
 .views-edit-view input.form-submit {
   border-radius:5px;
   -moz-border-radius:5px;
@@ -46,13 +46,13 @@ input.form-submit:hover {
   color:#FFFFFF;
   font-size:11px;
   padding:2px 10px;
-  margin: 0.25em 0;
+  margin:0.25em 0;
 }
 
 form#views-ui-preview-form input#preview-submit {
  margin:1.15em 0 0;
 }
-/****** end: views module button fix ******/
+/****** end:views module button fix ******/
 
 textarea.resizable {
   -moz-border-radius-bottomleft:0;
@@ -66,24 +66,24 @@ html.js input.form-autocomplete {
 }
 
 #search-block-form input#edit-search-block-form-1 {
-  background: #FFF url(../img/search-zoom.png) no-repeat scroll 5px 4px;
-  padding-left: 28px;
-  width: 130px;
+  background:#FFF url(../img/search-zoom.png) no-repeat scroll 5px 4px;
+  padding-left:28px;
+  width:130px;
 }
 
 #search-form #edit-keys {
-  background: #FFF url(../img/search-zoom.png) no-repeat scroll 5px 4px;
-  padding-left: 28px; 
+  background:#FFF url(../img/search-zoom.png) no-repeat scroll 5px 4px;
+  padding-left:28px;
 }
 
 #search-block-form input.form-submit {
-  background: transparent url(../img/search-arrow.png) no-repeat scroll 1px 4px;
-  border: none;
-  text-indent: -9999px;
-  width: 25px;
-  height: 26px;
-  padding: 0;
-  cursor: pointer;
+  background:transparent url(../img/search-arrow.png) no-repeat scroll 1px 4px;
+  border:none;
+  text-indent:-9999px;
+  width:25px;
+  height:26px;
+  padding:0;
+  cursor:pointer;
 }
 
 #header #search-box input.form-submit {
@@ -93,7 +93,7 @@ html.js input.form-autocomplete {
   height:22px;
   line-height:22px;
   padding:0;
-  cursor: pointer;
+  cursor:pointer;
 }
 
 #header #search-box {
@@ -102,20 +102,20 @@ html.js input.form-autocomplete {
   float:right;
   margin:10px;
   padding:10px;
-  color: #fff;
+  color:#fff;
 }
 
 
 #block-comment-0 ul li a {
-  border: none;
-  padding: 0;
-  background: none;
-  display: inline;
+  border:none;
+  padding:0;
+  background:none;
+  display:inline;
 }
 
 #block-comment-0 ul li {
-  border-bottom: 1px solid #ddd;
-  padding-top: 5px;
+  border-bottom:1px solid #ddd;
+  padding-top:5px;
 }
 
 
@@ -124,13 +124,14 @@ html.js input.form-autocomplete {
 /********************************************/
 #primary {
   bottom:0;
-  height:70px;
+  height:40px;
   position:absolute;
   width:990px;
-  background: transparent url(../img/transparent-black.png);
+  background:transparent url(../img/transparent-black.png);
 }
 
 #primary ul.links {
+  margin:0;
   bottom:0;
   position:absolute;
 }
@@ -140,10 +141,10 @@ html.js input.form-autocomplete {
   float:left;
   font-size:16px;
   font-weight:bold;
-  height:70px;
-  line-height:70px;
+  height:40px;
+  line-height:40px;
   margin:0;
-  padding:0 30px;
+  padding:0 15px;
 }
 
 #primary ul.links li a {
@@ -152,7 +153,7 @@ html.js input.form-autocomplete {
 }
 
 #primary ul.links li a.active {
-  color: #FFF;
+  color:#FFF;
 }
 
 
@@ -166,7 +167,7 @@ html.js input.form-autocomplete {
 }
 
 #secondary ul.links {
-  margin:0 15px 0 15px;
+  margin:0;
   padding:0;
 }
 
@@ -186,7 +187,7 @@ html.js input.form-autocomplete {
 }
 
 #secondary ul.links li a.active {
-  font-weight: bold;
+  font-weight:bold;
 }
 
 
@@ -208,15 +209,15 @@ html.js input.form-autocomplete {
 /**********   Pseudo Fieldsets     **********/
 /********************************************/
 .container-inline div.pseudo-fieldset div {
-  display: block !important;
+  display:block !important;
 }
 
 .pseudo-fieldset {
-  margin: 0.75em 0;
+  margin:0.75em 0;
 }
 
 .collapsed .pseudo-fieldset-content {
-  display: none;
+  display:none;
 }
 
 .pseudo-fieldset-title {
@@ -227,12 +228,12 @@ html.js input.form-autocomplete {
 }
 
 .collapsible .pseudo-fieldset-title {
-  cursor: pointer;
+  cursor:pointer;
 }
 
 .pseudo-fieldset-content {
-  padding: 10px;
-  background-color: #FAFAFA;
+  padding:10px;
+  background-color:#FAFAFA;
 
   -moz-border-radius-bottomleft:3px;
   -moz-border-radius-bottomright:3px;
@@ -249,44 +250,44 @@ html.js input.form-autocomplete {
 /**********      Main Layout       **********/
 /********************************************/
 #page {
-  margin:auto; 
-  width:990px; 
-  border:15px solid #ffffff; 
+  margin:auto;
+  width:990px;
+  border:15px solid #ffffff;
   background-color:#ffffff;
 }
 
 #header {
   height:220px;
-  position: relative;
+  position:relative;
 }
 
 #header-image{
-	height: 220px;
-	width: 990px;
+	height:220px;
+	width:990px;
 }
 
 #logo-title {
-/  background:transparent url(../img/transparent-black.png) repeat scroll 0 0;
+  background:transparent url(../img/transparent-black.png) repeat scroll 0 0;
   display:block;
   float:left;
   margin:10px;
   padding:10px 20px;
-  position: absolute;
-  top: 0;
+  position:absolute;
+  top:0;
 }
 
 #logo {
-  display: none;
+  display:none;
 }
 
 #name-and-slogan h1 {
-  font-size: 24px;
+  font-size:24px;
 
-  margin: 0;
+  margin:0;
 }
 
 #name-and-slogan h1 a {
-  color: #fff;
+  color:#fff;
 }
 
 #site-slogan {
@@ -306,8 +307,8 @@ html.js input.form-autocomplete {
 #container p,
 #container li {
   line-height:160%;
-  list-style-type: none;
-  
+  list-style-type:none;
+
 }
 
 
@@ -318,7 +319,7 @@ html.js input.form-autocomplete {
 }
 
 #container {
-  background: transparent url(../img/bg-shadow.png) repeat-x scroll center -5px;
+  background:transparent url(../img/bg-shadow.png) repeat-x scroll center -5px;
   padding:30px 0 0;
   position:relative;
 }
@@ -329,8 +330,8 @@ html.js input.form-autocomplete {
 }
 
 #main-squeeze {
-  padding: 0 1em;
-  background-color: #fff;
+  padding:0 1em;
+  background-color:#fff;
 }
 
 .sidebar-first #main,
@@ -351,7 +352,7 @@ html.js input.form-autocomplete {
 
 #footer {
   background-color:#FAFAFA;
-  padding: 5px;
+  padding:5px;
   margin-top:30px;
   text-align:center;
 }
@@ -366,11 +367,11 @@ a.feed-icon {
 /**********      First Time Style  **********/
 /********************************************/
 #first-time {
-  background-color: #f6f6f6;
+  background-color:#f6f6f6;
 }
 
 #first-time p {
-  padding: 0 5px;
+  padding:0 5px;
 }
 
 #first-time strong {
@@ -385,7 +386,7 @@ a.feed-icon {
 h1, h2, h3, h4, h5, #headline a {
   margin-bottom:0.5em;
   color:#000;
-  font-weight: normal;
+  font-weight:normal;
 }
 
 #main h1 {
@@ -399,18 +400,18 @@ h1, h2, h3, h4, h5, #headline a {
   background-color:#F0F0F0;
   margin:0 0 1px;
   padding:5px;
-  display: block;
+  display:block;
 }
 
 #main #content .content {
   background-color:#FAFAFA;
-  padding: 5px;
+  padding:5px;
 }
 
 
 #main #content .teaser .content {
-  background-color: transparent;
-  padding: 5px;
+  background-color:transparent;
+  padding:5px;
 }
 
 h1 {
@@ -445,21 +446,21 @@ p {
   border-radius:10px;
   -moz-border-radius:10px;
   -webkit-border-radius:10px;
-  background-color: #f6f6f6;
+  background-color:#f6f6f6;
   padding:10px;
   margin:0 0 0.5em 0;
-  font-size: 16px;
+  font-size:16px;
 }
 
 /********************************************/
 /**********     Admin Style        **********/
 /********************************************/
 .fourseasons-admin #main {
-  width: 78% !important;
+  width:78% !important;
 }
 
 .fourseasons-admin #sidebar-right {
-  display: none !important;
+  display:none !important;
 }
 
 .fourseasons-admin #main-squeeze {
@@ -475,7 +476,7 @@ div.messages {
   color:#FFFFFF;
   font-size:12px;
   margin:10px 0;
-  
+
 }
 
 div.admin .left,
@@ -502,15 +503,17 @@ div.admin-panel .body ul {
 }
 
 ul.primary {
-  display: block;
+  display:block;
   border:none;
-  margin: 0 0 1px 0;
+  margin:0 0 1px 0;
   padding:10px 5px;
-  background-color: #f0f0f0;
+  background-color:#f0f0f0;
+  white-space: normal;
 }
 
 ul.primary li {
-  margin-right: 3px;
+  margin:6px 0;
+  display:inline-block;
 }
 
 .tabs ul.primary li a {
@@ -527,27 +530,27 @@ ul.primary li {
 .tabs ul.primary li a:hover {
   margin:0;
   color:#fff;
-  background-color: #333;
+  background-color:#333;
 }
 
 .tabs ul.primary li.active a {
-  background-color: #444;
+  background-color:#444;
   color:#ffffff;
 }
 
 
 ul.secondary {
-  display: block;
+  display:block;
   border:none;
-  margin: 0;
+  margin:0;
   padding:5px;
-  background-color: #f0f0f0;
+  background-color:#f0f0f0;
 }
 
 ul.secondary li {
-  margin-right: 3px;
-  padding: 0;
-  border: none;
+  margin-right:3px;
+  padding:0;
+  border:none;
 }
 
 .tabs ul.secondary li a {
@@ -556,20 +559,20 @@ ul.secondary li {
   -webkit-border-radius:3px;
   margin:0;
   color:#444;
-  background-color: #f6f6f6;
-  border: 1px solid #999;
-  padding: 2px 10px;
+  background-color:#f6f6f6;
+  border:1px solid #999;
+  padding:2px 10px;
   line-height:2.3em;
 }
 
 .tabs ul.secondary li a:hover {
   margin:0;
   color:#fff;
-  background-color: #444;
+  background-color:#444;
 }
 
 .tabs ul.secondary li.active a {
-  background-color: #444;
+  background-color:#444;
   color:#ffffff;
 }
 
@@ -583,7 +586,7 @@ ul.secondary li {
 table,
 table.package {
   width:100%;
-  margin: 1em 0;
+  margin:1em 0;
 }
 
 table tr.odd {
@@ -601,7 +604,7 @@ table {
 table th,
 table td {
   border:1px solid #DDDDDD;
-  padding: 4px 7px;
+  padding:4px 7px;
   vertical-align:middle;
 }
 
@@ -611,7 +614,7 @@ table td a {
 }
 
 table th a {
-  
+
 }
 
 table thead {
@@ -654,7 +657,7 @@ td.container .description {
 }
 
 #breadcrumb .breadcrumb {
-  padding: 0;
+  padding:0;
 }
 
 
@@ -664,7 +667,7 @@ td.container .description {
 }
 
 .breadcrumb-separator {
-  padding: 0 3px;
+  padding:0 3px;
 }
 
 
@@ -674,17 +677,16 @@ td.container .description {
 /********************************************/
 .block {
   margin-bottom:1em;
-  background-color: #FAFAFA;
+  background-color:#FAFAFA;
 }
 
 .block h2 {
   background-color:#EEEEEE;
   font-size:1.4em;
   font-weight:normal;
-  height:1.75em;
-  line-height:1.75em;
+  line-height:1.25em;
   margin:0;
-  padding:0 10px;
+  padding:5px 10px;
 }
 
 .block .content {
@@ -695,7 +697,7 @@ div.block-region {
   border-radius:10px;
   -moz-border-radius:10px;
   -webkit-border-radius:10px;
-  
+
   background-color:#333333;
   border:2px solid #999999;
   color:#FF7302;
@@ -711,7 +713,7 @@ div.block-region {
 /**********      User login        **********/
 /********************************************/
 #block-user-0 #user-login-form .form-text {
-  width: 75px;
+  width:75px;
 }
 
 #block-user-0 #user-login-form .form-item {
@@ -724,7 +726,7 @@ div.block-region {
 #block-user-0 #user-login-form .form-item label, .form-item label {
   font-size:11px;
   font-style:italic;
-  font-weight: normal;
+  font-weight:normal;
   padding-left:2px;
 }
 
@@ -749,7 +751,7 @@ div.block-region {
   border-radius:10px;
   -moz-border-radius:10px;
   -webkit-border-radius:10px;
-  background-color: #f6f6f6;
+  background-color:#f6f6f6;
   padding:10px;
   margin:0 0 0.5em 0;
 }
@@ -763,53 +765,53 @@ div.block-region {
 }
 
 .node .links, .comment .links {
-  text-align: left;
+  text-align:left;
 }
 
-.node .links ul.links li, 
+.node .links ul.links li,
 .comment .links ul.links li {
-  padding-left: 1em;
-  float: right;
+  padding-left:1em;
+  float:right;
 }
 
 .comment-links {
-	text-align: right;
+	text-align:right;
 }
 
 .terms ul.links li {
-  margin-left: 0;
-  margin-right: 0;
-  padding-right: 0;
-  padding-left: 1em;
+  margin-left:0;
+  margin-right:0;
+  padding-right:0;
+  padding-left:1em;
 }
 
 .new {
-  color: #ffae00;
-  font-size: 0.92em;
-  font-weight: bold;
-  float: right;
+  color:#ffae00;
+  font-size:0.92em;
+  font-weight:bold;
+  float:right;
 }
 
 .terms {
-  float: right;
+  float:right;
 }
 
 .terms ul.links li {
-  display: inline;
+  display:inline;
 }
 
 .preview .node, .preview .comment, .sticky {
-  margin: 0;
-  padding: 0.5em 0;
-  border: 0;
-  background: 0;
+  margin:0;
+  padding:0.5em 0;
+  border:0;
+  background:0;
 }
 
 .sticky {
-  padding: 1em;
-  background-color: #fff;
-  border: 1px solid #e0e5fb;
-  margin-bottom: 2em;
+  padding:1em;
+  background-color:#fff;
+  border:1px solid #e0e5fb;
+  margin-bottom:2em;
 }
 
 div.picture {
@@ -817,11 +819,11 @@ div.picture {
 }
 
 div.picture img {
-  border: 1px solid #cccccc; 
-  margin: 0px 0px 10px 10px;
-  padding: 3px; 
+  border:1px solid #cccccc;
+  margin:0px 0px 10px 10px;
+  padding:3px;
 
-  background-color: #f3f3f3;
+  background-color:#f3f3f3;
 }
 
 
@@ -928,13 +930,13 @@ div.comment .links li {
 }
 
 #forum ul.links li {
-  display: inline;
+  display:inline;
 }
 
 #forum ul.links li a {
   -moz-border-radius:3px;
   -webkit-border-radius:3px;
-  margin: 10px 0;
+  margin:10px 0;
   background:#F6F6F6 url(../img/forum-new.png) no-repeat scroll 4px 3px;
   background-color:#F6F6F6;
   border:1px solid #999999;
@@ -946,20 +948,20 @@ div.comment .links li {
 #forum ul.links li a:hover {
   margin:0;
   color:#fff;
-  background-color: #444;
+  background-color:#444;
 }
 
 #forum tr td.forum {
-  background: transparent url(../img/forum-folder.png) no-repeat scroll 4px 3px;
+  background:transparent url(../img/forum-folder.png) no-repeat scroll 4px 3px;
   padding-left:30px;
 }
 
 #forum tr.depth-1 td.forum {
-  background-position: 24px 3px;
+  background-position:24px 3px;
 }
 
 #forum tr.depth-2 td.forum {
-  background-position: 44px 3px;
+  background-position:44px 3px;
 }
 
 #forum .description {
@@ -969,7 +971,7 @@ div.comment .links li {
 
 
 #forum .icon img {
-  display: none;
+  display:none;
 }
 
 #forum .title a {
@@ -980,9 +982,9 @@ div.comment .links li {
 }
 
 #forum th a {
-  color: #000;
-  font-weight: normal;
-  text-decoration: none;
+  color:#000;
+  font-weight:normal;
+  text-decoration:none;
 }
 
 
@@ -990,9 +992,9 @@ div.comment .links li {
 /**********       Profile Style    **********/
 /********************************************/
 #main-squeeze .profile {
-  background-color: #F6F6F6;
-  padding: 10px 5px;
-  margin: 0;
+  background-color:#F6F6F6;
+  padding:10px 5px;
+  margin:0;
 }
 
 /********************************************/
@@ -1017,119 +1019,63 @@ div.comment .links li {
 /********************************************/
 /**********    Menu in Sidebars    **********/
 /********************************************/
-.block ul { 
-  padding: 0;
+.block ul {
+  padding:0;
 }
 
 .sidebar ul, .sidebar ul li {
-  margin: 0;
-  padding: 0;
+  margin:0;
+  padding:0;
 }
 
-.sidebar li { 
-  list-style-type: none;
-  list-style-image: none;
+.sidebar li {
+  list-style-type:none;
+  list-style-image:none;
 }
 
 .sidebar ul li a {
-  background-image: url(../img/menu-leaf.gif);
+  background-image:url(../img/menu-leaf.gif);
   background-repeat:no-repeat;
-  padding-left: 1.5em;
-  border-bottom: 1px solid #e6e6e6;
-  background-position: 0.3em 0.6em;
-  line-height: 1.9em;
-  display: block;
+  padding-left:1.5em;
+  border-bottom:1px solid #e6e6e6;
+  background-position:0.3em 0.6em;
+  line-height:1.9em;
+  display:block;
 }
 
 .sidebar ul li {
-  list-style-type: none;
-  list-style-image: none;
+  list-style-type:none;
+  list-style-image:none;
 }
 
 .sidebar ul li.expanded > a {
-  background-image: url(../img/menu-expanded.gif);
+  background-image:url(../img/menu-expanded.gif);
 }
 
 .sidebar ul li.collapsed > a {
-  background-image: url(../img/menu-collapsed.gif);
+  background-image:url(../img/menu-collapsed.gif);
 }
 
 .sidebar ul li ul li > a {
-  padding-left: 2.5em;
-  background-position: 1.3em 0.6em;
+  padding-left:2.5em;
+  background-position:1.3em 0.6em;
 }
 
 .sidebar ul li ul li ul li > a {
-  padding-left: 3.8em;
-  background-position: 2.6em 0.6em;
+  padding-left:3.8em;
+  background-position:2.6em 0.6em;
 }
 
 .sidebar ul li ul li ul li ul li > a {
-  padding-left: 4.9em;
-  background-position: 3.7em 0.6em;
+  padding-left:4.9em;
+  background-position:3.7em 0.6em;
 }
 
 .sidebar li.active-trail > a {
   font-weight:bold;
-  background-color: #f0f0f0;
+  background-color:#f0f0f0;
 }
 
 .sidebar li > a:hover {
-  background-color: #f0f0f0;
+  background-color:#f0f0f0;
 }
-
-
-/*
-dl {
-  margin: 0.5em 0 1em 1.5em;
-}
-
-dl dt {
-}
-
-dl dd {
-  margin: 0 0 .5em 1.5em;
-}
-
-img, a img {
-  border: none;
-}
-*/
-
-
-/********************************************/
-/**********     try another ...    **********/
-/********************************************/
-#font span,
-#farben span {
-  font-family:arial; 
-  color:#333333; 
-  font-size:10px; 
-  text-decoration:none; 
-  float:left; 
-  display:block;
-}
-
-#farben a {
-  width:10px; 
-  height:10px; 
-  display:block;
-  float:left;
-  margin-left:5px;
-}
-
-#font a {
-  display:block;
-  float:left;
-  margin-left:5px;
-  font-family:arial;
-  color:#cccccc;
-  font-size:10px;
-  text-decoration:none;
-}
-
-
-
-
-
-

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains the feed display plugin.
@@ -36,7 +37,7 @@ class views_plugin_display_feed extends views_plugin_display_page {
   function execute() {
     $output = $this->view->render();
     if (empty($output)) {
-      return drupal_not_found();
+      return MENU_NOT_FOUND;
     }
     print $output;
   }

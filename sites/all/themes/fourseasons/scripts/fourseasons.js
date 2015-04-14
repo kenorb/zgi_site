@@ -2,6 +2,9 @@
 
   Drupal.behaviors.fourseasons = {
     attach: function(context) {
+		if(typeof(Drupal.settings.fourseasons) == 'undefined'){
+			return false;
+		}
 		var $base_color = Drupal.settings.fourseasons.base_color;
 		jQuery("h1, h2, h3, h4, h5").css("color", "#" + $base_color);
 		jQuery("#secondary ").css("background", "#" + $base_color);

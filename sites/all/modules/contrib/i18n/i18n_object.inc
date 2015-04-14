@@ -1,9 +1,15 @@
 <?php
 /**
+ * @file
+ * i18n Object Class
+ */
+
+/**
  * Object wrapper
  */
 class i18n_object_wrapper {
   protected $type;
+  protected $key;
   protected $object;
   // Object translations, static cache.
   protected $translations;
@@ -11,9 +17,10 @@ class i18n_object_wrapper {
   /**
    * Class constructor
    */
-  public function __construct($type, $object) {
+  public function __construct($type, $key, $object) {
     $this->type = $type;
-    $this->object = $object;
+    $this->key = $key;
+    $this->object = $object ? $object : $this->load_object($key);
   }
 
   /**
@@ -40,9 +47,9 @@ class i18n_object_wrapper {
     elseif (is_array($this->object)) {
       $this->object[$field] = $value;
     }
-    return $this;   
+    return $this;
   }
-  
+
   /**
    * Get string numeric key for indexing.
    */
@@ -71,10 +78,27 @@ class i18n_object_wrapper {
   }
 
   /**
-   * Get real object or array
+   * Get real object or array.
    */
   public function get_object() {
     return $this->object;
+  }
+
+  /**
+   * Load real object or array.
+   *
+   * @param $object
+   */
+  function load_object($object) {
+    if ($callback = $this->get_info('load callback', NULL)) {
+      $this->object = call_user_func($callback, $object);
+    }
+    elseif ($entity_type = $this->get_info('entity', NULL)) {
+      $entity = entity_load($entity_type, array($object));
+      $this->object = $entity ? reset($entity) : FALSE;
+    }
+
+    return $this->get_object();
   }
 
   /**
@@ -87,7 +111,7 @@ class i18n_object_wrapper {
     }
     return $placeholders;
   }
-  
+
   /**
    * Get link for item
    */
@@ -102,6 +126,12 @@ class i18n_object_wrapper {
    */
   public function get_title() {
     return entity_label($this->type, $this->object);
+  }
+  /**
+   * Get object type
+   */
+  public function get_type() {
+    return $this->type;
   }
 
   /**
@@ -123,7 +153,7 @@ class i18n_object_wrapper {
    */
   function get_translate_mode() {
     return I18N_MODE_NONE;
-  }  
+  }
 
   /**
    * Get translation set id if any
@@ -162,7 +192,7 @@ class i18n_object_wrapper {
       return $this->object;
     }
   }
- 
+
   /**
    * Translate access (translation sets)
    */
@@ -179,7 +209,7 @@ class i18n_object_wrapper {
 
   /**
    * Replace path with placeholders
-   * 
+   *
    * @param $path
    *   Path to replace
    * @param $replacements
@@ -206,8 +236,7 @@ class i18n_object_wrapper {
    * Get object translation set info
    */
   public function get_translation_info($property, $default = NULL) {
-    $info = $this->get_info('translation set');
-    return $info && isset($info[$property]) ? $info[$property] : $default;
+    return function_exists('i18n_translation_set_info') ? i18n_translation_set_info($this->type, $property, $default) : $default;
   }
   /**
    * Get object string translation info

@@ -1,4 +1,6 @@
 <div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ($comment->status == COMMENT_NOT_PUBLISHED) ? ' comment-unpublished' : ''; print ' '. $zebra; ?>">
+  <div class="clear-block">
+<?php print_r(user_load(array('uid'=>$node->uid))); ?>
   <?php if ($comment->new) : ?>
     <a id="new"></a>
     <span class="new"><?php print drupal_ucfirst($new) ?></span>

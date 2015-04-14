@@ -10,9 +10,8 @@ class Drupali18nTestCase extends DrupalWebTestCase {
   protected $secondary_language;
 
   function setUpLanguages($admin_permissions = array()) {
-    // Setup users.
-    $this->admin_user = $this->drupalCreateUser(array_merge(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages'), $admin_permissions));
-    $this->translator = $this->drupalCreateUser(array('translate interface'));
+    // Setup admin user.
+    $this->admin_user = $this->drupalCreateUser(array_merge(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages', 'translate interface'), $admin_permissions));
 
     $this->drupalLogin($this->admin_user);
 
@@ -43,11 +42,12 @@ class Drupali18nTestCase extends DrupalWebTestCase {
     );
 
     $type = node_type_get_type($settings['type']);
-
-    $this->translator = $this->drupalCreateUser(array(
+    // Create content editor with translation permissions.
+    $this->content_editor = $this->drupalCreateUser(array(
       'create ' . $type->type . ' content',
       'edit own ' . $type->type . ' content',
       'translate content',
+      'translate interface',
     ));
 
     $this->drupalLogin($this->admin_user);
@@ -144,12 +144,14 @@ class Drupali18nTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Create a "Basic page" in the specified language.
-   *
+   * Create a node of the specified type in the specified language.
+   
+   * @param $type
+   *   The node type.
    * @param $title
-   *   Title of basic page in specified language.
+   *   Title of node in specified language.
    * @param $body
-   *   Body of basic page in specified language.
+   *   Body of node in specified language.
    * @param $langcode
    *   Language code.
    */
@@ -159,7 +161,9 @@ class Drupali18nTestCase extends DrupalWebTestCase {
     $edit["body[$lang][0][value]"] = $body;
     $edit['language'] = $langcode;
     $this->drupalPost('node/add/' . $type, $edit, t('Save'));
-    $this->assertRaw(t('Basic @type %title has been created.', array('@type' => $type, '%title' => $title)), t('Basic page created.'));
+    $info = node_type_load($type);
+    $message = t('@name %title has been created.', array('@name' => $info->name, '%title' => $title));
+    $this->assertRaw($message);
 
     // Check to make sure the node was created.
     $node = $this->drupalGetNodeByTitle($title);
@@ -169,24 +173,23 @@ class Drupali18nTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Create a translation for the specified basic page in the specified
-   * language.
+   * Create a translation for the specified node in the specified language.
    *
    * @param $node
    *   The basic page to create translation for.
    * @param $title
-   *   Title of basic page in specified language.
+   *   Title of node in specified language.
    * @param $body
-   *   Body of basic page in specified language.
+   *   Body of node in specified language.
    * @param $language
    *   Language code.
    */
   function createNodeTranslation($node, $language, $title = NULL, $body = NULL) {
     $body = $body ? $body : $this->randomName();
     $title = $title ? $title : $this->randomName();
-    $this->drupalGet('node/add/' . $node->type, array('query' => array('translation' => $node->nid, 'target' => $language->language)));    
+    $this->drupalGet('node/add/' . $node->type, array('query' => array('translation' => $node->nid, 'target' => $language->language)));
 
-    
+
     $this->assertFieldByXPath('//input[@id="edit-title"]', $node->title, "Original title value correctly populated.");
     $field_lang = field_language('node', $node, 'body');
     $body_key = "body[und][0][value]";
@@ -196,8 +199,9 @@ class Drupali18nTestCase extends DrupalWebTestCase {
     $edit["title"] = $title;
     $edit[$body_key] = $body;
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Basic page %title has been created.', array('%title' => $title)), t('Translation created.'));
-
+    $info = node_type_load($node->type);
+    $message = t('@name %title has been created.', array('@name' => $info->name, '%title' => $title));
+    $this->assertRaw($message);
     // Check to make sure that translation was successful.
     $translation = $this->drupalGetNodeByTitle($title);
     $this->assertTrue($translation, t('Node found in database.'));
@@ -278,7 +282,7 @@ class Drupali18nTestCase extends DrupalWebTestCase {
    */
   public function switchLanguage($newlang = NULL) {
     $newlang = $newlang ? $newlang : $this->install_locale;
-    $GLOBALS['language'] = $this->getLanguage($newlang);
+    $GLOBALS[LANGUAGE_TYPE_INTERFACE] = $this->getLanguage($newlang);
   }
 
   /**
@@ -435,7 +439,7 @@ class Drupali18nTestCase extends DrupalWebTestCase {
 }
 
 class Drupali18nConfigTestCase extends Drupali18nTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Multilingual configuration',
       'group' => 'Internationalization',

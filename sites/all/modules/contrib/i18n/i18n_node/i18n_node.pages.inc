@@ -18,12 +18,15 @@ function i18n_node_add_page() {
     drupal_goto($item['href']);
   }
   foreach ($content as &$item) {
-    // Type machine name will be the third part of the path
-    $parts = explode('/', $item['path']);
-    $type = $parts[2];
-    // We just need to translate the description, the title is translated by the menu system
-    // The string will be filtered (xss_admin) on the theme layer
-    $item['description'] = i18n_node_translate_type($type, 'description', $item['description']);
+    // Type machine name will be the first page argument
+    $page_arguments = unserialize($item['page_arguments']);
+    // Check whether this has a node type, other items may be here too, see #1264662
+    $type = isset($page_arguments[0]) ? $page_arguments[0] : NULL;
+    if ($type) {
+      // We just need to translate the description, the title is translated by the menu system
+      // The string will be filtered (xss_admin) on the theme layer
+      $item['description'] = i18n_node_translate_type($type, 'description', $item['description'], array('sanitize' => FALSE));
+    }
   }
   return theme('node_add_list', array('content' => $content));
 }
@@ -78,7 +81,7 @@ function i18n_node_translation_overview($node) {
     else {
       // No such translation in the set yet: help user to create it.
       $title = t('n/a');
-      if (node_access('create', $node)) {
+      if (node_access('create', $node->type)) {
         $text = t('add translation');
         $path = 'node/add/' . str_replace('_', '-', $node->type);
         $query = array('query' => array('translation' => $node->nid, 'target' => $langcode));
@@ -107,18 +110,15 @@ function i18n_node_translation_overview($node) {
  * Create link for node translation. This may be a 'edit' or a 'add translation' link.
  */
 function i18n_node_translation_link($text, $path, $langcode, $options = array()) {
-  // We may want to switch interface for translation (core default) or not
-  if (variable_get_value('i18n_node_translation_switch')) {
-    $type = variable_get('translation_language_type', LANGUAGE_TYPE_INTERFACE);
-    $links = language_negotiation_get_switch_links($type, $path);
-    // When node not published, links don't have href so we use path instead
-    // Note: this is a bug in Core translation module, see http://drupal.org/node/1137074
-    if (!empty($links->links[$langcode]) && !empty($links->links[$langcode]['href'])) {
-      $options += array('attributes' => array(), 'html' => FALSE);
-      $options['attributes'] += $links->links[$langcode]['attributes'];
-      $options += $links->links[$langcode];
-      $path = $links->links[$langcode]['href'];
-    }
+  $type = variable_get('translation_language_type', LANGUAGE_TYPE_INTERFACE);
+  $links = language_negotiation_get_switch_links($type, $path);
+  // When node not published, links don't have href so we use path instead
+  // Note: this is a bug in Core translation module, see http://drupal.org/node/1137074
+  if (!empty($links->links[$langcode]) && !empty($links->links[$langcode]['href'])) {
+    $options += array('attributes' => array(), 'html' => FALSE);
+    $options['attributes'] += $links->links[$langcode]['attributes'];
+    $options += $links->links[$langcode];
+    $path = $links->links[$langcode]['href'];
   }
   return l($text, $path, $options);
 }
@@ -213,6 +213,7 @@ function i18n_node_select_translation_submit($form, &$form_state) {
       ))
       ->condition('nid', $add)
       ->execute();
+    entity_get_controller('node')->resetCache($add);
     if (count($new)) {
       drupal_set_message(format_plural(count($new), 'Added a node to the translation set.', 'Added @count nodes to the translation set.'));
     }
@@ -224,6 +225,7 @@ function i18n_node_select_translation_submit($form, &$form_state) {
       ))
       ->condition('nid', $remove)
       ->execute();
+    entity_get_controller('node')->resetCache($remove);
     drupal_set_message(format_plural(count($remove), 'Removed a node from the translation set.', 'Removed @count nodes from the translation set.'));
   }
 }
@@ -246,7 +248,7 @@ function i18n_node_autocomplete($type, $language, $string = '') {
  */
 function i18n_node_nid2autocomplete($nid) {
   if ($node = node_load($nid)) {
-    return check_plain($node->title) . ' [nid:' . $nid . ']';
+    return $node->title . ' [nid:' . $nid . ']';
   }
   else {
     return t('Not found');
@@ -312,7 +314,7 @@ function _i18n_node_references($string, $match = 'contains', $params = array(), 
       break;
 
     case 'starts_with':
-      $query->condition('n.title', $string . '%', LIKE);
+      $query->condition('n.title', $string . '%', 'LIKE');
       break;
 
     case 'contains':

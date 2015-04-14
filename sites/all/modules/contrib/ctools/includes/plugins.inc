@@ -64,6 +64,7 @@ function ctools_plugin_api_info($owner, $api, $minimum_version, $current_version
     foreach (module_implements($hook) as $module) {
       $function = $module . '_' . $hook;
       $info = $function($owner, $api);
+      $version = NULL;
       // This is added to make hook_views_api() compatible with this, since
       // views used a different version key.
       if (isset($info['version'])) {
@@ -107,6 +108,9 @@ function ctools_plugin_api_info($owner, $api, $minimum_version, $current_version
         }
       }
     }
+
+    // Allow other modules to hook in.
+    drupal_alter($hook, $cache[$owner][$api]);
   }
 
   return $cache[$owner][$api];
@@ -143,10 +147,10 @@ function ctools_plugin_api_include($owner, $api, $minimum_version, $current_vers
   foreach ($info as $module => $plugin_info) {
     if (!isset($already_done[$owner][$api][$module])) {
       if (isset($plugin_info["$api file"])) {
-        $file = isset($plugin_info["$api file"]);
+        $file = $plugin_info["$api file"];
       }
       else if (isset($plugin_info['file'])) {
-        $file = isset($plugin_info['file']);
+        $file = $plugin_info['file'];
       }
       else {
         $file = "$module.$api.inc";
@@ -210,7 +214,12 @@ function ctools_plugin_api_get_hook($owner, $api) {
 function ctools_get_plugins($module, $type, $id = NULL) {
   // Store local caches of plugins and plugin info so we don't have to do full
   // lookups everytime.
-  $plugins = &drupal_static('ctools_plugins', array());
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['plugins'] = &drupal_static('ctools_plugins', array());
+  }
+  $plugins = &$drupal_static_fast['plugins'];
+
   $info = ctools_plugin_get_plugin_type_info();
 
   // Bail out noisily if an invalid module/type combination is requested.
@@ -271,7 +280,9 @@ function ctools_get_plugins($module, $type, $id = NULL) {
       // If a plugin supports children, go through each plugin and ask.
       $temp = array();
       foreach ($plugins[$module][$type] as $name => $plugin) {
-        if (!empty($plugin['get children']) && function_exists($plugin['get children'])) {
+        // The strpos ensures that we don't try to find children for plugins
+        // that are already children.
+        if (!empty($plugin['get children']) && function_exists($plugin['get children']) && strpos($name, ':') === FALSE) {
           $temp = array_merge($plugin['get children']($plugin, $name), $temp);
         }
         else {
@@ -337,8 +348,13 @@ function ctools_get_plugins($module, $type, $id = NULL) {
  *   name and each inner array keyed on plugin type name.
  */
 function ctools_plugin_get_plugin_type_info($flush = FALSE) {
-  $info_loaded = &drupal_static('ctools_plugin_type_info_loaded', FALSE);
-  $all_type_info = &drupal_static('ctools_plugin_type_info', array());
+  static $drupal_static_fast;
+  if (!isset($drupal_static_fast)) {
+    $drupal_static_fast['info_loaded'] = &drupal_static('ctools_plugin_type_info_loaded', FALSE);
+    $drupal_static_fast['all_type_info'] = &drupal_static('ctools_plugin_type_info', array());
+  }
+  $info_loaded = &$drupal_static_fast['info_loaded'];
+  $all_type_info = &$drupal_static_fast['all_type_info'];
 
   // Only trigger info loading once.
   if ($info_loaded && !$flush) {
@@ -388,6 +404,7 @@ function ctools_plugin_get_plugin_type_info($flush = FALSE) {
  * Reset all static caches that affect the result of ctools_get_plugins().
  */
 function ctools_get_plugins_reset() {
+  drupal_static_reset('ctools_plugins');
   drupal_static_reset('ctools_plugin_setup');
   drupal_static_reset('ctools_plugin_load_includes');
   drupal_static_reset('ctools_plugin_api_info');
@@ -411,29 +428,19 @@ function ctools_plugin_load_includes($info, $filename = NULL) {
   // store static of plugin arrays for reference because they can't be reincluded.
   static $plugin_arrays = array();
 
-  // If we're being asked for all plugins of a type, skip any caching
-  // we may have done because this is an admin task and it's ok to
-  // spend the extra time.
-  if (!isset($filename)) {
-    $all_files[$info['module']][$info['type']] = NULL;
-  }
-
   if (!isset($all_files[$info['module']][$info['type']])) {
-    // If a filename was set, we will try to load our list of files from
-    // cache. This is considered normal operation and we try to reduce
-    // the time spent finding files.
-    if (isset($filename)) {
-      $cache = cache_get("ctools_plugin_files:$info[module]:$info[type]");
-      if ($cache) {
-        $all_files[$info['module']][$info['type']] = $cache->data;
-      }
+    $cache = cache_get("ctools_plugin_files:$info[module]:$info[type]");
+    if ($cache) {
+      $all_files[$info['module']][$info['type']] = $cache->data;
     }
-
-    if (!isset($all_files[$info['module']][$info['type']])) {
+    // Do not attempt any file scan even if the cached entry was empty.
+    // A NULL entry here would mean the plugin just does not exists, and we
+    // cannot afford to run file scan on production sites normal run.
+    elseif (!isset($all_files[$info['module']][$info['type']])) {
       $all_files[$info['module']][$info['type']] = array();
       // Load all our plugins.
       $directories = ctools_plugin_get_directories($info);
-      $extension = empty($info['info file']) ? $info['extension'] : 'info';
+      $extension = (empty($info['info file']) || ($info['extension'] != 'inc')) ? $info['extension'] : 'info';
 
       foreach ($directories as $module => $path) {
         $all_files[$info['module']][$info['type']][$module] = file_scan_directory($path, '/\.' . $extension . '$/', array('key' => 'name'));
@@ -671,7 +678,7 @@ function ctools_plugin_process($info, $module, $identifier, $path, $file = NULL,
     if (!function_exists($function)) {
       return NULL;
     }
-    $result = $function();
+    $result = $function($info);
     if (!isset($result) || !is_array($result)) {
       return NULL;
     }

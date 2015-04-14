@@ -20,3 +20,6 @@ function i18n_variable_variable_info($options = array()) {
   );
   return $variables;
 }
+
+
+

@@ -4,8 +4,15 @@ configure = admin/config/regional/gtranslate
 package = Multilanguage
 core = 7.x
 ; Information added by drupal.org packaging script on 2011-07-06
-version = "7.x-1.7"
+version = "7.x-1.8"
 core = "7.x"
 project = "gtranslate"
-datestamp = "1309958525"
+datestamp = "1357904911"
+
+
+; Information added by Drupal.org packaging script on 2014-04-26
+version = "7.x-1.10"
+core = "7.x"
+project = "gtranslate"
+datestamp = "1398503928"
 

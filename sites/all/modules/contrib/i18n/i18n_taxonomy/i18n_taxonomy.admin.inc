@@ -165,7 +165,7 @@ function i18n_taxonomy_translation_term_form_submit($form, &$form_state) {
  */
 function i18n_taxonomy_translation_sets_overview($vocabulary) {
   module_load_include('admin.inc', 'i18n_translation');
-  drupal_set_title(check_plain($vocabulary->name));
+  drupal_set_title($vocabulary->name);
   $query = db_select('i18n_translation_set', 't')
     ->condition('t.bundle', $vocabulary->machine_name);
   return i18n_translation_admin_overview('taxonomy_term', $query);
@@ -199,7 +199,14 @@ function i18n_taxonomy_translation_term_overview($term) {
       $path = 'taxonomy/term/' . $translation_term->tid;
       $title = l($translation_term->name, $path);
 
-      $options[] = l(t('edit'), $path . '/edit');
+      $options['edit'] = array(
+        '#type' => 'link',
+        '#title' => t('edit'),
+        '#href' => $path . '/edit',
+        '#options' => array(
+          'query' => drupal_get_destination(),
+        ),
+      );
 
       if ($translation_term->tid == $i18n_tsid) {
         $language_name = t('<strong>@language_name</strong> (source)', array('@language_name' => $language_name));
@@ -208,14 +215,25 @@ function i18n_taxonomy_translation_term_overview($term) {
     else {
       // No such translation in the set yet: help user to create it.
       $title = t('n/a');
-      $options[] = l(t('add translation'), 'admin/structure/taxonomy/' . $term->vocabulary_machine_name . '/add', array('query' => array('translation' => $term->tid, 'target' => $langcode) + drupal_get_destination()));
+      $options['add'] = array(
+        '#type' => 'link',
+        '#title' => t('add translation'),
+        '#href' => 'admin/structure/taxonomy/' . $term->vocabulary_machine_name . '/add',
+        '#options' => array(
+          'query' => array('translation' => $term->tid, 'target' => $langcode) + drupal_get_destination()
+        ),
+      );
     }
-    $rows[] = array($language_name, $title, implode(" | ", $options));
+    $rows[$langcode] = array(
+      'language' => $language_name,
+      'title' => $title,
+      'operations' => array('data' => $options),
+    );
   }
 
   drupal_set_title(t('Translations of term %title', array('%title' => $term->name)), PASS_THROUGH);
 
-  $build['translation_node_overview'] = array(
+  $build['translation_overview'] = array(
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,

@@ -18,16 +18,18 @@ function statistics_views_default_views() {
   $view->base_table = 'node';
   $view->human_name = 'Popular content';
   $view->core = 0;
-  $view->api_version = '3.0-alpha1';
+  $view->api_version = '3.0';
   $view->disabled = TRUE; /* Edit this to true to make a default view disabled initially */
 
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Popular content';
   $handler->display->display_options['use_more'] = TRUE;
-  $handler->display->display_options['access']['type'] = 'none';
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['access']['perm'] = 'access content';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['query']['options']['query_comment'] = FALSE;
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
   $handler->display->display_options['pager']['options']['items_per_page'] = '25';
@@ -157,7 +159,6 @@ function statistics_views_default_views() {
 
   /* Display: Popular (block) */
   $handler = $view->new_display('block', 'Popular (block)', 'block');
-  $handler->display->display_options['defaults']['items_per_page'] = FALSE;
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
   $handler->display->display_options['style_plugin'] = 'list';
   $handler->display->display_options['defaults']['style_options'] = FALSE;
@@ -187,7 +188,6 @@ function statistics_views_default_views() {
   $handler = $view->new_display('block', 'Today (block)', 'block_1');
   $handler->display->display_options['defaults']['title'] = FALSE;
   $handler->display->display_options['title'] = 'Today\'s popular content';
-  $handler->display->display_options['defaults']['items_per_page'] = FALSE;
   $handler->display->display_options['defaults']['link_display'] = FALSE;
   $handler->display->display_options['link_display'] = 'page_1';
   $handler->display->display_options['defaults']['style_plugin'] = FALSE;
@@ -246,6 +246,7 @@ function statistics_views_default_views() {
     t('Today (block)'),
     t('Today\'s popular content'),
   );
+
   $views['popular'] = $view;
 
   return $views;

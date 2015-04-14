@@ -10,7 +10,7 @@
  * Produces a menu translation form.
  */
 function i18n_menu_translation_form($form, $form_state, $translation_set = NULL, $item = NULL) {
-  $translation_set = $translation_set ? $translation_set : i18n_translation_set_create('menu_link');
+  $translation_set = $translation_set ? $translation_set : i18n_translation_set_build('menu_link');
   $form['translation_set'] = array('#type' => 'value', '#value' => $translation_set);
   $translations = $translation_set->get_translations();
   // What to do with title? Let's make it a hidden field for now, some tests relay on it
@@ -55,7 +55,7 @@ function i18n_menu_translation_form($form, $form_state, $translation_set = NULL,
   }
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['update'] = array('#type' => 'submit', '#value' => t('Save'));
-  if ($translation_set) {
+  if (!empty($translation_set->tsid)) {
     $form['actions']['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
   }
   return $form;
@@ -169,7 +169,7 @@ function _i18n_menu_get_options($menus, $available_menus, $item, $langcode) {
   $options = array();
   foreach ($menus as $menu_name => $title) {
     if (isset($available_menus[$menu_name])) {
-      if ($tree = i18n_menu_tree_all_data($menu_name, $langcode, NULL)) {  
+      if ($tree = i18n_menu_tree_all_data($menu_name, $langcode, NULL)) {
         $options[$menu_name . ':0'] = '<' . $title . '>';
         _menu_parents_recurse($tree, $menu_name, '--', $options, $item['mlid'], $limit);
       }
@@ -224,6 +224,7 @@ function i18n_menu_translation_item_overview($item, $translation_set = NULL) {
 
   $type = variable_get('translation_language_type', LANGUAGE_TYPE_INTERFACE);
   $header = array(t('Language'), t('Title'), t('Operations'));
+  $rows = array();
 
   foreach (i18n_language_list() as $langcode => $language_name) {
     $options = array();
@@ -243,12 +244,16 @@ function i18n_menu_translation_item_overview($item, $translation_set = NULL) {
       $title = t('n/a');
       $options[] = l(t('add translation'), 'admin/structure/menu/manage/' . $item['menu_name'] . '/add', array('query' => array('translation' => $item['mlid'], 'target' => $langcode) + drupal_get_destination()));
     }
-    $rows[] = array($language_name, $title, implode(" | ", $options));
+    $rows[$langcode] = array(
+      'language' => $language_name,
+      'title' => $title,
+      'operations' => implode(" | ", $options)
+    );
   }
 
   drupal_set_title(t('Translations of menu item %title', array('%title' => $item['link_title'])), PASS_THROUGH);
 
-  $build['translation_item_overview'] = array(
+  $build['translation_overview'] = array(
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
